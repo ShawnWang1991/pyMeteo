@@ -7,7 +7,6 @@ Created on 2018/11/14 12:46:47
 
 from h5py import File as h5File
 import numpy as np
-from numpy import arange, rint
 from projection import latlon2lc
 
 
@@ -61,7 +60,7 @@ class FY4A_H5(object):
         CALChannelname = "CAL" + channelname
         # 若geo_range没有指定，则读取全部数据，不定标
         if geo_range is None:
-            channel = self.h5file[NOMChannelname].value
+            channel = self.h5file[NOMChannelname][()]
             self.channels[channelname] = channel
             return None
         geo_range = eval(geo_range)
@@ -72,11 +71,11 @@ class FY4A_H5(object):
             lon = np.arange(lon_W, lon_E+0.005, step)
             lon, lat = np.meshgrid(lon, lat)
             self.l, self.c = latlon2lc(lat, lon, "4000M")  # 求标称全圆盘行列号
-            self.l = rint(self.l).astype(np.uint16)
-            self.c = rint(self.c).astype(np.uint16)
+            self.l = np.rint(self.l).astype(np.uint16)
+            self.c = np.rint(self.c).astype(np.uint16)
         # DISK全圆盘数据和REGC中国区域数据区别在起始行号和终止行号
-        channel = self.h5file[NOMChannelname].value[self.l - self.l_begin, self.c]
-        CALChannel = self.h5file[CALChannelname].value  # 定标表
+        channel = self.h5file[NOMChannelname][()][self.l - self.l_begin, self.c]
+        CALChannel = self.h5file[CALChannelname][()]  # 定标表
         self.channels[channelname] = CALChannel[channel]  # 缺测值！？
 
 
@@ -88,8 +87,8 @@ if __name__ == "__main__":
     from datetime import datetime
     from netCDF4 import date2num, Dataset as ncDataset
     from matplotlib import pyplot as plt
-    h5path = r".\testdata"  # FY-4A一级数据所在路径
-    ncname = r".\testdata\test.nc"
+    h5path = r"..\data"  # FY-4A一级数据所在路径
+    ncname = r"..\data\test.nc"
     h5list = [join(h5path, x) for x in listdir(h5path)
               if "4000M" in x and "FDI" in x]
     geo_range = "10, 54, 70, 140, 0.05"

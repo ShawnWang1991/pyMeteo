@@ -5,15 +5,17 @@ Created on 2018/10/24 08:00:36
 @author: modabao
 """
 
+
 import tkinter as tk
 from tkinter import filedialog  # 必须单独导入
-import numpy as np
+
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
+import cartopy.io.shapereader as shpreader
+
 from fy4a import FY4A_H5
-from China_map import provinces_geometrys
 
 
 class GUI(tk.Tk):
@@ -158,5 +160,8 @@ class GUI(tk.Tk):
 
 
 if __name__ == '__main__':
+    shpname = r"..\data\map\China_province"
+    provinces_records = list(shpreader.Reader(shpname).records())
+    provinces_geometrys = [x.geometry for x in provinces_records]
     app = GUI()
     app.mainloop()

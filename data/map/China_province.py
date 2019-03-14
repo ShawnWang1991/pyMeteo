@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-中国省级行政区划./map/China_province
+中国省级行政区划China_province
 Created on 2018/10/24 10:43:02
 @author: modabao
 """
@@ -14,7 +14,7 @@ def __extract():
     provinces_geometrys：geometry列表
     provinces_attributes：attribute列表
     """
-    shpname = r".\map\China_province"
+    shpname = r"China_province"
     provinces_records = list(shpreader.Reader(shpname).records())
     provinces_geometrys = [x.geometry for x in provinces_records]
     provinces_attributes = [x.attributes for x in provinces_records]
